@@ -31,9 +31,10 @@ sed -i "s/\"packageVersion\": \".*\"/\"packageVersion\": \"$PACKAGE_VERSION\"/" 
 npx @openapitools/openapi-generator-cli generate \
   --global-property apis,models,supportingFiles,modelDocs=false \
   -i ../../../schemas/openapi.yml \
-  -g python-pydantic-v1 \
+  -g python \
   -c openapitools.json \
   --library asyncio \
   --additional-properties=generateSourceCodeOnly=true,packageName=agent_protocol_client
 
-black .
+poetry install
+poetry run black .
