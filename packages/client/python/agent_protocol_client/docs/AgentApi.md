@@ -22,6 +22,7 @@ Creates a task for the agent.
 
 ### Example
 
+
 ```python
 import time
 import os
@@ -57,6 +58,7 @@ async with agent_protocol_client.ApiClient(configuration) as api_client:
 
 ### Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **task_request_body** | [**TaskRequestBody**](TaskRequestBody.md)|  | [optional] 
@@ -75,6 +77,7 @@ No authorization required
  - **Accept**: application/json
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | A new agent task was successfully created. |  -  |
@@ -89,6 +92,7 @@ No authorization required
 Download a specified artifact.
 
 ### Example
+
 
 ```python
 import time
@@ -124,6 +128,7 @@ async with agent_protocol_client.ApiClient(configuration) as api_client:
 
 ### Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **task_id** | **str**| ID of the task | 
@@ -143,6 +148,7 @@ No authorization required
  - **Accept**: application/octet-stream, application/json
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returned the content of the artifact. |  -  |
@@ -157,6 +163,7 @@ No authorization required
 Execute a step in the specified agent task.
 
 ### Example
+
 
 ```python
 import time
@@ -194,6 +201,7 @@ async with agent_protocol_client.ApiClient(configuration) as api_client:
 
 ### Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **task_id** | **str**| ID of the task | 
@@ -213,6 +221,7 @@ No authorization required
  - **Accept**: application/json
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Executed step for the agent task. |  -  |
@@ -228,6 +237,7 @@ No authorization required
 Get details about a specified agent task.
 
 ### Example
+
 
 ```python
 import time
@@ -263,6 +273,7 @@ async with agent_protocol_client.ApiClient(configuration) as api_client:
 
 ### Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **task_id** | **str**| ID of the task | 
@@ -281,6 +292,7 @@ No authorization required
  - **Accept**: application/json
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returned details about an agent task. |  -  |
@@ -295,6 +307,7 @@ No authorization required
 Get details about a specified task step.
 
 ### Example
+
 
 ```python
 import time
@@ -331,6 +344,7 @@ async with agent_protocol_client.ApiClient(configuration) as api_client:
 
 ### Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **task_id** | **str**| ID of the task | 
@@ -350,6 +364,7 @@ No authorization required
  - **Accept**: application/json
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returned details about an agent task step. |  -  |
@@ -364,6 +379,7 @@ No authorization required
 List all artifacts that have been created for the given task.
 
 ### Example
+
 
 ```python
 import time
@@ -401,6 +417,7 @@ async with agent_protocol_client.ApiClient(configuration) as api_client:
 
 ### Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **task_id** | **str**| ID of the task | 
@@ -421,6 +438,7 @@ No authorization required
  - **Accept**: application/json
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returned the list of artifacts for the task. |  -  |
@@ -435,6 +453,7 @@ No authorization required
 List all steps for the specified task.
 
 ### Example
+
 
 ```python
 import time
@@ -472,6 +491,7 @@ async with agent_protocol_client.ApiClient(configuration) as api_client:
 
 ### Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **task_id** | **str**| ID of the task. | 
@@ -492,6 +512,7 @@ No authorization required
  - **Accept**: application/json
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returned list of agent&#39;s steps for the specified task. |  -  |
@@ -506,6 +527,7 @@ No authorization required
 List all tasks that have been created for the agent.
 
 ### Example
+
 
 ```python
 import time
@@ -542,6 +564,7 @@ async with agent_protocol_client.ApiClient(configuration) as api_client:
 
 ### Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **current_page** | **int**| Page number | [optional] [default to 1]
@@ -561,6 +584,7 @@ No authorization required
  - **Accept**: application/json
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returned list of agent&#39;s tasks. |  -  |
@@ -574,6 +598,7 @@ No authorization required
 Upload an artifact for the specified task.
 
 ### Example
+
 
 ```python
 import time
@@ -611,6 +636,7 @@ async with agent_protocol_client.ApiClient(configuration) as api_client:
 
 ### Parameters
 
+
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **task_id** | **str**| ID of the task | 
@@ -631,6 +657,7 @@ No authorization required
  - **Accept**: application/json
 
 ### HTTP response details
+
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Returned the content of the artifact. |  -  |

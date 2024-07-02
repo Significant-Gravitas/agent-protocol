@@ -18,27 +18,42 @@ import re  # noqa: F401
 import json
 
 
-from typing import Optional
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, StrictBool, StrictStr
+from pydantic import Field
+
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self
 
 
 class Artifact(BaseModel):
     """
-    An Artifact either created by or submitted to the agent.  # noqa: E501
-    """
+    An Artifact either created by or submitted to the agent.
+    """  # noqa: E501
 
-    artifact_id: StrictStr = Field(..., description="ID of the artifact.")
+    artifact_id: StrictStr = Field(description="ID of the artifact.")
     agent_created: StrictBool = Field(
-        ..., description="Whether the artifact has been created by the agent."
+        description="Whether the artifact has been created by the agent."
     )
-    file_name: StrictStr = Field(..., description="Filename of the artifact.")
+    file_name: StrictStr = Field(description="Filename of the artifact.")
     relative_path: Optional[StrictStr] = Field(
-        None, description="Relative path of the artifact in the agent's workspace."
+        default=None,
+        description="Relative path of the artifact in the agent's workspace.",
     )
-    __properties = ["artifact_id", "agent_created", "file_name", "relative_path"]
+    __properties: ClassVar[List[str]] = [
+        "artifact_id",
+        "agent_created",
+        "file_name",
+        "relative_path",
+    ]
 
-    model_config = ConfigDict(populate_by_name=True, validate_assignment=True)
-    """Pydantic configuration"""
+    model_config = {
+        "populate_by_name": True,
+        "validate_assignment": True,
+        "protected_namespaces": (),
+    }
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -46,16 +61,29 @@ class Artifact(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Artifact:
+    def from_json(cls, json_str: str) -> Self:
         """Create an instance of Artifact from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
-    def to_dict(self):
-        """Returns the dictionary representation of the model using alias"""
-        _dict = self.model_dump(by_alias=True, exclude={}, exclude_none=True)
+    def to_dict(self) -> Dict[str, Any]:
+        """Return the dictionary representation of the model using alias.
+
+        This has the following differences from calling pydantic's
+        `self.model_dump(by_alias=True)`:
+
+        * `None` is only added to the output dict for nullable fields that
+          were set at model initialization. Other fields with value `None`
+          are ignored.
+        """
+        _dict = self.model_dump(
+            by_alias=True,
+            exclude={},
+            exclude_none=True,
+        )
         # set to None if relative_path (nullable) is None
         # and model_fields_set contains the field
         if self.relative_path is None and "relative_path" in self.model_fields_set:
@@ -64,15 +92,15 @@ class Artifact(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> Artifact:
+    def from_dict(cls, obj: Dict) -> Self:
         """Create an instance of Artifact from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return Artifact.model_validate(obj)
+            return cls.model_validate(obj)
 
-        _obj = Artifact.model_validate(
+        _obj = cls.model_validate(
             {
                 "artifact_id": obj.get("artifact_id"),
                 "agent_created": obj.get("agent_created"),

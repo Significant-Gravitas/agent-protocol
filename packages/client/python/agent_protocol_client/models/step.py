@@ -18,38 +18,49 @@ import re  # noqa: F401
 import json
 
 
-from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, conlist, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, StrictBool, StrictStr, field_validator
+from pydantic import Field
 from agent_protocol_client.models.artifact import Artifact
+
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self
 
 
 class Step(BaseModel):
     """
     Step
-    """
+    """  # noqa: E501
 
-    input: Optional[StrictStr] = Field(None, description="Input prompt for the step.")
+    input: Optional[StrictStr] = Field(
+        default=None, description="Input prompt for the step."
+    )
     additional_input: Optional[Dict[str, Any]] = Field(
-        None, description="Input parameters for the task step. Any value is allowed."
+        default=None,
+        description="Input parameters for the task step. Any value is allowed.",
     )
-    task_id: StrictStr = Field(
-        ..., description="The ID of the task this step belongs to."
+    task_id: StrictStr = Field(description="The ID of the task this step belongs to.")
+    step_id: StrictStr = Field(description="The ID of the task step.")
+    name: Optional[StrictStr] = Field(
+        default=None, description="The name of the task step."
     )
-    step_id: StrictStr = Field(..., description="The ID of the task step.")
-    name: Optional[StrictStr] = Field(None, description="The name of the task step.")
-    status: StrictStr = Field(..., description="The status of the task step.")
-    output: Optional[StrictStr] = Field(None, description="Output of the task step.")
+    status: StrictStr = Field(description="The status of the task step.")
+    output: Optional[StrictStr] = Field(
+        default=None, description="Output of the task step."
+    )
     additional_output: Optional[Dict[str, Any]] = Field(
-        None,
+        default=None,
         description="Output that the task step has produced. Any value is allowed.",
     )
-    artifacts: conlist(Artifact) = Field(
-        ..., description="A list of artifacts that the step has produced."
+    artifacts: List[Artifact] = Field(
+        description="A list of artifacts that the step has produced."
     )
     is_last: StrictBool = Field(
-        ..., description="Whether this is the last step in the task."
+        description="Whether this is the last step in the task."
     )
-    __properties = [
+    __properties: ClassVar[List[str]] = [
         "input",
         "additional_input",
         "task_id",
@@ -71,8 +82,11 @@ class Step(BaseModel):
             )
         return value
 
-    model_config = ConfigDict(populate_by_name=True, validate_assignment=True)
-    """Pydantic configuration"""
+    model_config = {
+        "populate_by_name": True,
+        "validate_assignment": True,
+        "protected_namespaces": (),
+    }
 
     def to_str(self) -> str:
         """Returns the string representation of the model using alias"""
@@ -80,16 +94,29 @@ class Step(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> Step:
+    def from_json(cls, json_str: str) -> Self:
         """Create an instance of Step from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
-    def to_dict(self):
-        """Returns the dictionary representation of the model using alias"""
-        _dict = self.model_dump(by_alias=True, exclude={}, exclude_none=True)
+    def to_dict(self) -> Dict[str, Any]:
+        """Return the dictionary representation of the model using alias.
+
+        This has the following differences from calling pydantic's
+        `self.model_dump(by_alias=True)`:
+
+        * `None` is only added to the output dict for nullable fields that
+          were set at model initialization. Other fields with value `None`
+          are ignored.
+        """
+        _dict = self.model_dump(
+            by_alias=True,
+            exclude={},
+            exclude_none=True,
+        )
         # override the default output from pydantic by calling `to_dict()` of each item in artifacts (list)
         _items = []
         if self.artifacts:
@@ -123,15 +150,15 @@ class Step(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> Step:
+    def from_dict(cls, obj: Dict) -> Self:
         """Create an instance of Step from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return Step.model_validate(obj)
+            return cls.model_validate(obj)
 
-        _obj = Step.model_validate(
+        _obj = cls.model_validate(
             {
                 "input": obj.get("input"),
                 "additional_input": obj.get("additional_input"),
