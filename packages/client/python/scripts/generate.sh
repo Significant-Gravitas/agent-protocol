@@ -37,4 +37,4 @@ npx @openapitools/openapi-generator-cli generate \
   --additional-properties=generateSourceCodeOnly=true,packageName=agent_protocol_client
 
 poetry install
-poetry run black .
+poetry run ruff format
