@@ -37,4 +37,5 @@ npx @openapitools/openapi-generator-cli generate \
   --additional-properties=generateSourceCodeOnly=true,packageName=agent_protocol_client
 
 poetry install
+poetry run isort .
 poetry run ruff format
