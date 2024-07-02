@@ -1,12 +1,13 @@
 import asyncio
 
 from agent_protocol.models import StepRequestBody
+
 from agent_protocol_client import (
-    Configuration,
+    AgentApi,
     ApiClient,
+    Configuration,
     StepRequestBody,
     TaskRequestBody,
-    AgentApi,
 )
 
 # Defining the host is optional and defaults to http://localhost
